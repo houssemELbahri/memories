@@ -1,23 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
-const { Memory } = require("../models/memory");
+const {
+  createMemory,
+  getAllMemories,
+  getMemory,
+  deleteMemory,
+  updateMemory,
+} = require("../controllers/memories");
 
-router.get(`/`, async (req, res) => {
-  const memories = await Memory.find();
-  res.status(200).send({ success: true, memories });
-});
-
-router.post(`/`, (req, res) => {
-  const { title, description } = req.body;
-  const memory = new Memory({
-    title,
-    description,
-  });
-  memory
-    .save()
-    .then((createdMemory) => res.status(201).json(createdMemory))
-    .catch((err) => res.status(500).json({ error: err, success: false }));
-});
+router.route("/").get(getAllMemories).post(createMemory);
+router.route("/:id").get(getMemory).patch(updateMemory).delete(deleteMemory);
 
 module.exports = router;
